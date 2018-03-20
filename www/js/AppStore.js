@@ -6,6 +6,6 @@ export default class AppStore {
     }
 
     @action setTestVal(){
-        testVal = 1
+        this.testVal = 1
     }
 }
