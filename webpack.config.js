@@ -12,11 +12,9 @@ var path = require('path');
      module: {
          loaders: [
              {
-                 test: /\.js$/,
+                test: /\.jsx?$/,
                  loader: 'babel-loader',
-                 query: {
-                     presets: ['es2015']
-                 }
+                 exclude: /node_modules/
              }
          ],
          
