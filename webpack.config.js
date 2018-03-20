@@ -1,7 +1,7 @@
 var path = require('path');
  var webpack = require('webpack');
  module.exports = {
-     entry: './www/js/app.js',
+     entry: './www/js/app.jsx',
      output: {
          path: path.resolve(__dirname, 'www/build/'),
          filename: 'app.bundle.js'
@@ -9,19 +9,16 @@ var path = require('path');
      resolve: {
         extensions: ['.js', '.jsx']
       },
-     module: {
-         loaders: [
-             {
-                test: /\.jsx?$/,
-                 loader: 'babel-loader',
-                 exclude: /node_modules/
-             }
-         ],
-         
-
-     },
-     stats: {
-         colors: true
-     },
-     devtool: 'source-map'
+      module: {
+        rules: [
+          {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            use: {
+              loader: "babel-loader"
+            }
+          }
+        ]
+      },
+      devtool: 'source-map',
  };
