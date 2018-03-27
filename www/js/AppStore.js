@@ -52,11 +52,11 @@ export default class AppStore {
         this.state = "won"
         clearInterval(this.overallTimer)
         let timeInt = 3000  
-        $(".crawlImage").css("display","block")
-        .animate({right:'0px'},timeInt, "linear")
-        .animate({bottom:'0px', },2*timeInt, "linear")
-        .animate({left:'0px'},timeInt, "linear")
-        .animate({top:'0px'},2*timeInt, "linear");
+        // $(".crawlImage").css("display","block")
+        // .animate({right:'0px'},timeInt, "linear")
+        // .animate({bottom:'0px', },2*timeInt, "linear")
+        // .animate({left:'0px'},timeInt, "linear")
+        // .animate({top:'0px'},2*timeInt, "linear");
      }
 
     @action restart(){

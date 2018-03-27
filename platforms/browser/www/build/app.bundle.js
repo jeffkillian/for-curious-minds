@@ -20278,7 +20278,12 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     }, {
         key: "renderCrawler",
         value: function renderCrawler() {
-            return _react2.default.createElement("img", { src: "/www/img/kanye_head.png", className: "crawlImage" });
+            if (this.props.store.state != "won") return;
+            return _react2.default.createElement(
+                "div",
+                { className: "imageSize crawlImage" },
+                _react2.default.createElement("img", { src: "/www/img/banana-cluster.png", className: "imageSize" })
+            );
         }
     }, {
         key: "renderRestart",
@@ -40250,7 +40255,11 @@ var AppStore = (_class = function () {
             this.state = "won";
             clearInterval(this.overallTimer);
             var timeInt = 3000;
-            $(".crawlImage").css("display", "block").animate({ right: '0px' }, timeInt, "linear").animate({ bottom: '0px' }, 2 * timeInt, "linear").animate({ left: '0px' }, timeInt, "linear").animate({ top: '0px' }, 2 * timeInt, "linear");
+            // $(".crawlImage").css("display","block")
+            // .animate({right:'0px'},timeInt, "linear")
+            // .animate({bottom:'0px', },2*timeInt, "linear")
+            // .animate({left:'0px'},timeInt, "linear")
+            // .animate({top:'0px'},2*timeInt, "linear");
         }
     }, {
         key: "restart",

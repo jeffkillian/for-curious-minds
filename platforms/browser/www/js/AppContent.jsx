@@ -32,8 +32,10 @@ export default class AppContent extends React.Component {
     }
 
     renderCrawler(){
-        return(
-            <img src="/www/img/kanye_head.png" className="crawlImage"/>
+        if (this.props.store.state != "won") return
+        return(<div className="imageSize crawlImage">
+                <img src="/www/img/banana-cluster.png" className="imageSize"/>
+                </div>
         )
     }
 
