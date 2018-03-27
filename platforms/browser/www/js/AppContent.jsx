@@ -9,38 +9,52 @@ export default class AppContent extends React.Component {
         const store = this.props.store
         return(
             <div>
+                {this.renderCrawler()}
                 <div className="title">Road to Precision</div>
                 {this.renderElapsedTime()}
                 <div> 
-                    <div className="row">
-                        <div className="col-sm-4">
+        
+                        <div className="button">
                             <button 
                                 onClick={store.toggleTimer.bind(store)}
-                                type="button" className="btn btn-primary">
+                                type="button" className="btn btn-primary" disabled = {this.props.store.state == "won"}>
                                 {store.buttonText}
+                                
                             </button>
                         </div>
-                        <div className="col-sm-6">
-                            <button className="ml-1"
-                                onClick={store.toggleBlindMode.bind(store)}
-                                type="button" className="btn btn-success">
-                                Toggle Blind Mode
-                            </button>
-                            </div>
-                    </div>
-                    {this.renderHighScore()}
-
+                        
+                    {this.renderAttempts()}
+                    {this.renderRestart()}
                     {this.renderOverallTime()}
                 </div>
             </div>
         )
     }
-    renderHighScore(){
+
+    renderCrawler(){
+        return(
+            <img src="/www/img/kanye_head.png" className="crawlImage"/>
+        )
+    }
+
+    renderRestart(){
+        if (this.props.store.state != "won") return
+        return(
+            <div className="button">
+            <button 
+                onClick={this.props.store.restart.bind(this.props.store)}
+                type="button" className="btn btn-primary">
+                Restart
+            </button>
+        </div>
+        )
+    }
+
+    renderAttempts(){
         return(
             <div>
-                {this.renderNew()}
-                High Score:{this.props.store.highScore}
-            </div>
+                Total Attempts: {this.props.store.totalAttempts}
+                </div>
         )
     }
     renderNew(){
@@ -60,7 +74,7 @@ export default class AppContent extends React.Component {
 
     renderOverallTime(){
         return(
-            <div>
+            <div className="overall-elapsed-time">
                 {this.props.store.overallTimeElapsed}
             </div>
         )

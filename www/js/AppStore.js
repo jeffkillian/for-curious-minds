@@ -3,24 +3,27 @@ export default class AppStore {
     @observable elapsedTime = 0
     @observable startTime
     @observable timerRunning
-    @observable highScore
-    @observable newHighScore
     @observable isBlindMode
     @observable overallTime
+    @observable totalAttempts
+    @observable state
     constructor(){
         console.log(
             "need to add ondeviceready?"
         )
-        this.highScore = 1000
-        this.startOverallTimer()
+        this.state = "waiting"
+        this.totalAttempts = 0
+        this.startGame()
     }
 
-    @action startOverallTimer(){
+    @action startGame(){
         this.initialLaunchTime = Date.now()
         this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10)
+        this.state = "playing"
     }
     @action startTimer(){
         this.timerRunning = true
+        this.totalAttempts++
         this.startTime = Date.now()
         this.timer = setInterval(this.changeTime.bind(this), 10)
     }
@@ -28,7 +31,7 @@ export default class AppStore {
     @action changeTime(){
         this.elapsedTime = Date.now()-this.startTime
     }
-    @action changeOverallTime(){
+    @action changeOverallTime(){    
         this.overallTime = Date.now()-this.initialLaunchTime
     }
 
@@ -39,18 +42,27 @@ export default class AppStore {
     @action stopTimer(){
         clearInterval(this.timer)
         this.timerRunning = false
-        var difference = Math.abs(1000-this.elapsedTime)
-        if (difference < this.highScore){
-            this.newHighScore = true
-            this.highScore = difference
-        }else{
-            this.newHighScore = false;
-        }
-
-        if (difference == 0){
-            clearInterval(this.overallTimer)
+        if (this.elapsedTime < 1000){
+            this.onWin()
         }
         
+    }
+    
+    @action onWin(){
+        this.state = "won"
+        clearInterval(this.overallTimer)
+        let timeInt = 3000  
+        $(".crawlImage").css("display","block")
+        .animate({right:'0px'},timeInt, "linear")
+        .animate({bottom:'0px', },2*timeInt, "linear")
+        .animate({left:'0px'},timeInt, "linear")
+        .animate({top:'0px'},2*timeInt, "linear");
+     }
+
+    @action restart(){
+        this.state = "waiting"
+        this.totalAttempts = 0
+        this.startGame()
     }
 
     @action toggleBlindMode(){

@@ -20226,8 +20226,6 @@ __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -20250,6 +20248,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
             return _react2.default.createElement(
                 "div",
                 null,
+                this.renderCrawler(),
                 _react2.default.createElement(
                     "div",
                     { className: "title" },
@@ -20261,44 +20260,50 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     null,
                     _react2.default.createElement(
                         "div",
-                        { className: "row" },
+                        { className: "button" },
                         _react2.default.createElement(
-                            "div",
-                            { className: "col-sm-4" },
-                            _react2.default.createElement(
-                                "button",
-                                {
-                                    onClick: store.toggleTimer.bind(store),
-                                    type: "button", className: "btn btn-primary" },
-                                store.buttonText
-                            )
-                        ),
-                        _react2.default.createElement(
-                            "div",
-                            { className: "col-sm-6" },
-                            _react2.default.createElement(
-                                "button",
-                                _defineProperty({ className: "ml-1",
-                                    onClick: store.toggleBlindMode.bind(store),
-                                    type: "button" }, "className", "btn btn-success"),
-                                "Toggle Blind Mode"
-                            )
+                            "button",
+                            {
+                                onClick: store.toggleTimer.bind(store),
+                                type: "button", className: "btn btn-primary", disabled: this.props.store.state == "won" },
+                            store.buttonText
                         )
                     ),
-                    this.renderHighScore(),
+                    this.renderAttempts(),
+                    this.renderRestart(),
                     this.renderOverallTime()
                 )
             );
         }
     }, {
-        key: "renderHighScore",
-        value: function renderHighScore() {
+        key: "renderCrawler",
+        value: function renderCrawler() {
+            return _react2.default.createElement("img", { src: "/www/img/kanye_head.png", className: "crawlImage" });
+        }
+    }, {
+        key: "renderRestart",
+        value: function renderRestart() {
+            if (this.props.store.state != "won") return;
+            return _react2.default.createElement(
+                "div",
+                { className: "button" },
+                _react2.default.createElement(
+                    "button",
+                    {
+                        onClick: this.props.store.restart.bind(this.props.store),
+                        type: "button", className: "btn btn-primary" },
+                    "Restart"
+                )
+            );
+        }
+    }, {
+        key: "renderAttempts",
+        value: function renderAttempts() {
             return _react2.default.createElement(
                 "div",
                 null,
-                this.renderNew(),
-                "High Score:",
-                this.props.store.highScore
+                "Total Attempts: ",
+                this.props.store.totalAttempts
             );
         }
     }, {
@@ -20326,7 +20331,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
         value: function renderOverallTime() {
             return _react2.default.createElement(
                 "div",
-                null,
+                { className: "overall-elapsed-time" },
                 this.props.store.overallTimeElapsed
             );
         }
@@ -40191,29 +40196,32 @@ var AppStore = (_class = function () {
 
         _initDefineProp(this, "timerRunning", _descriptor3, this);
 
-        _initDefineProp(this, "highScore", _descriptor4, this);
+        _initDefineProp(this, "isBlindMode", _descriptor4, this);
 
-        _initDefineProp(this, "newHighScore", _descriptor5, this);
+        _initDefineProp(this, "overallTime", _descriptor5, this);
 
-        _initDefineProp(this, "isBlindMode", _descriptor6, this);
+        _initDefineProp(this, "totalAttempts", _descriptor6, this);
 
-        _initDefineProp(this, "overallTime", _descriptor7, this);
+        _initDefineProp(this, "state", _descriptor7, this);
 
         console.log("need to add ondeviceready?");
-        this.highScore = 1000;
-        this.startOverallTimer();
+        this.state = "waiting";
+        this.totalAttempts = 0;
+        this.startGame();
     }
 
     _createClass(AppStore, [{
-        key: "startOverallTimer",
-        value: function startOverallTimer() {
+        key: "startGame",
+        value: function startGame() {
             this.initialLaunchTime = Date.now();
             this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10);
+            this.state = "playing";
         }
     }, {
         key: "startTimer",
         value: function startTimer() {
             this.timerRunning = true;
+            this.totalAttempts++;
             this.startTime = Date.now();
             this.timer = setInterval(this.changeTime.bind(this), 10);
         }
@@ -40232,17 +40240,24 @@ var AppStore = (_class = function () {
         value: function stopTimer() {
             clearInterval(this.timer);
             this.timerRunning = false;
-            var difference = Math.abs(1000 - this.elapsedTime);
-            if (difference < this.highScore) {
-                this.newHighScore = true;
-                this.highScore = difference;
-            } else {
-                this.newHighScore = false;
+            if (this.elapsedTime < 1000) {
+                this.onWin();
             }
-
-            if (difference == 0) {
-                clearInterval(this.overallTimer);
-            }
+        }
+    }, {
+        key: "onWin",
+        value: function onWin() {
+            this.state = "won";
+            clearInterval(this.overallTimer);
+            var timeInt = 3000;
+            $(".crawlImage").css("display", "block").animate({ right: '0px' }, timeInt, "linear").animate({ bottom: '0px' }, 2 * timeInt, "linear").animate({ left: '0px' }, timeInt, "linear").animate({ top: '0px' }, 2 * timeInt, "linear");
+        }
+    }, {
+        key: "restart",
+        value: function restart() {
+            this.state = "waiting";
+            this.totalAttempts = 0;
+            this.startGame();
         }
     }, {
         key: "toggleBlindMode",
@@ -40280,19 +40295,19 @@ var AppStore = (_class = function () {
 }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "timerRunning", [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "highScore", [_mobx.observable], {
+}), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "isBlindMode", [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "newHighScore", [_mobx.observable], {
+}), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "overallTime", [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "isBlindMode", [_mobx.observable], {
+}), _descriptor6 = _applyDecoratedDescriptor(_class.prototype, "totalAttempts", [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "overallTime", [_mobx.observable], {
+}), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "state", [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _applyDecoratedDescriptor(_class.prototype, "startOverallTimer", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startOverallTimer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "startTimer", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startTimer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeOverallTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeOverallTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "overallTimeElapsed", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "overallTimeElapsed"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "stopTimer", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "stopTimer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleBlindMode", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "toggleBlindMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "buttonText", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "buttonText"), _class.prototype)), _class);
+}), _applyDecoratedDescriptor(_class.prototype, "startGame", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startGame"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "startTimer", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startTimer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeOverallTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeOverallTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "overallTimeElapsed", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "overallTimeElapsed"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "stopTimer", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "stopTimer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "onWin", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onWin"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "restart", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "restart"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "toggleBlindMode", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "toggleBlindMode"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "buttonText", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "buttonText"), _class.prototype)), _class);
 exports.default = AppStore;
 
 /***/ })
