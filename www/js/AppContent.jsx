@@ -5,13 +5,14 @@ import "jquery"
 @inject("store") @observer
 export default class AppContent extends React.Component {
 
+
     render(){
         const store = this.props.store
         return(
             <div>
                 {this.renderCrawler()}
                 <div className="title">Road to Precision</div>
-                {this.renderElapsedTime()}
+                {this.renderRoundTime()}
                 <div> 
         
                         <div className="button">
@@ -26,13 +27,23 @@ export default class AppContent extends React.Component {
                     {this.renderAttempts()}
                     {this.renderRestart()}
                     {this.renderOverallTime()}
+                    {this.renderFastestTimeEver()}
                 </div>
             </div>
         )
     }
 
+    renderFastestTimeEver(){
+        if (!this.props.store.fastestTimeEver) return null
+        return (
+            <div>
+                Overall best time: {this.props.store.printableFastestTime}
+                </div>
+        )
+    }
+
     renderCrawler(){
-        if (this.props.store.state != "won") return
+        if (!this.props.store.isInWinState) return
         return(<div className="imageSize crawlImage">
                 <img src="/www/img/banana-cluster.png" className="imageSize"/>
                 </div>
@@ -40,7 +51,7 @@ export default class AppContent extends React.Component {
     }
 
     renderRestart(){
-        if (this.props.store.state != "won") return
+        if (!this.props.store.isInWinState) return
         return(
             <div className="button">
             <button 
@@ -66,10 +77,10 @@ export default class AppContent extends React.Component {
         )
     }
 
-    renderElapsedTime(){
+    renderRoundTime(){
         if (this.props.store.isBlindMode) return null
         return (<div className="currentTime">
-                {this.props.store.elapsedTime}
+                {this.props.store.roundTime}
                 </div>
             )   
     }
@@ -77,7 +88,7 @@ export default class AppContent extends React.Component {
     renderOverallTime(){
         return(
             <div className="overall-elapsed-time">
-                {this.props.store.overallTimeElapsed}
+                {this.props.store.printableTimeElapsed}
             </div>
         )
     }

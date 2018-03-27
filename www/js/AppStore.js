@@ -1,12 +1,13 @@
 import { observable, action, computed } from "mobx"
 export default class AppStore {
-    @observable elapsedTime = 0
+    @observable roundTime = 0
     @observable startTime
     @observable timerRunning
     @observable isBlindMode
     @observable overallTime
     @observable totalAttempts
     @observable state
+    @observable fastestTimeEver
     constructor(){
         console.log(
             "need to add ondeviceready?"
@@ -20,6 +21,7 @@ export default class AppStore {
         this.initialLaunchTime = Date.now()
         this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10)
         this.state = "playing"
+        this.fastestTimeEver = this.getFastestTimeEver() || ""
     }
     @action startTimer(){
         this.timerRunning = true
@@ -29,35 +31,58 @@ export default class AppStore {
     }
 
     @action changeTime(){
-        this.elapsedTime = Date.now()-this.startTime
+        this.roundTime = Date.now()-this.startTime
     }
     @action changeOverallTime(){    
-        this.overallTime = Date.now()-this.initialLaunchTime
+        this.overallTime = Date.now() - this.initialLaunchTime
     }
 
-    @computed get overallTimeElapsed(){
-        return (this.overallTime / 1000).toFixed(2)
+    @computed get printableTimeElapsed(){
+        return this.printableTime(this.roundTime)
+    }
+
+    @computed get printableFastestTime(){
+        return this.printableTime(this.fastestTimeEver)
+    }
+
+    printableTime(time){
+        return (time/ 1000).toFixed(2)
     }
 
     @action stopTimer(){
         clearInterval(this.timer)
         this.timerRunning = false
-        if (this.elapsedTime < 1000){
+        if (this.roundTime < 1000){
             this.onWin()
         }
         
     }
+
+    @computed get isInWinState(){
+        return this.state == "won";
+    }
     
     @action onWin(){
         this.state = "won"
+        this.handleSavingHighScoreToLocal()
         clearInterval(this.overallTimer)
         let timeInt = 3000  
-        // $(".crawlImage").css("display","block")
-        // .animate({right:'0px'},timeInt, "linear")
-        // .animate({bottom:'0px', },2*timeInt, "linear")
-        // .animate({left:'0px'},timeInt, "linear")
-        // .animate({top:'0px'},2*timeInt, "linear");
      }
+
+     @action handleSavingHighScoreToLocal(){
+        var highScore = this.getFastestTimeEver()
+        debugger
+        if (!highScore || (this.elapsedTime < highScore) ) {
+            localStorage.setItem('precision_high_score', this.elapsedTime);
+            debugger
+            this.fastestTimeEver = this.getFastestTimeEver()
+        }
+        
+    }
+
+    getFastestTimeEver(){
+        return parseInt(localStorage.getItem("precision_high_score"))
+    }
 
     @action restart(){
         this.state = "waiting"
