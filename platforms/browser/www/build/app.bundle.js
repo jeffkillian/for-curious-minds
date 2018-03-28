@@ -20265,9 +20265,9 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                         _react2.default.createElement(
                             "button",
                             {
-                                onClick: store.onButtonClick.bind(store),
+                                onMouseDown: store.onStartStopClick.bind(store),
                                 type: "button", className: "btn btn-primary", disabled: this.props.store.state == "won" },
-                            "Stop"
+                            this.props.store.startStopButtonText
                         )
                     ),
                     this.renderAttempts(),
@@ -40215,9 +40215,8 @@ var AppStore = (_class = function () {
         _initDefineProp(this, "lastRoundScore", _descriptor7, this);
 
         console.log("need to add ondeviceready?");
-        this.state = "waiting";
+        this.state = "stopped";
         this.totalAttempts = 0;
-        this.startGame();
     }
 
     _createClass(AppStore, [{
@@ -40225,13 +40224,14 @@ var AppStore = (_class = function () {
         value: function startGame() {
             this.initialLaunchTime = Date.now();
             this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10);
-            this.state = "playing";
             this.fastestTimeEver = this.getFastestTimeEver() || "";
-            this.startTimer();
+            this.startRound();
         }
     }, {
-        key: "startTimer",
-        value: function startTimer() {
+        key: "startRound",
+        value: function startRound() {
+            if (!this.initialLaunchTime) return this.startGame();
+            this.state = "playing";
             this.roundTimerRunning = true;
             this.totalAttempts++;
             this.roundStartTime = Date.now();
@@ -40253,15 +40253,21 @@ var AppStore = (_class = function () {
             return (time / 1000).toFixed(3);
         }
     }, {
-        key: "onButtonClick",
-        value: function onButtonClick() {
+        key: "onStartStopClick",
+        value: function onStartStopClick() {
+            if (this.state == "playing") return this.endRound();
+            return this.startRound();
+        }
+    }, {
+        key: "endRound",
+        value: function endRound() {
+            this.state = "stopped";
             clearInterval(this.roundTimer);
             this.roundTimerRunning = false;
             if (this.roundTime == 1000) {
                 return this.onWin();
             }
             this.lastRoundScore = this.roundTime;
-            this.startTimer();
         }
     }, {
         key: "onWin",
@@ -40284,12 +40290,6 @@ var AppStore = (_class = function () {
         value: function getFastestTimeEver() {
             return parseInt(localStorage.getItem("precision_high_score"));
         }
-
-        // toggleTimer(){
-        //     if (this.roundTimerRunnig) return this.stopTimer()
-        //     this.startTimer()
-        // }
-
     }, {
         key: "printableRoundTime",
         get: function get() {
@@ -40314,6 +40314,11 @@ var AppStore = (_class = function () {
         key: "isInWinState",
         get: function get() {
             return this.state == "won";
+        }
+    }, {
+        key: "startStopButtonText",
+        get: function get() {
+            return this.state == "playing" ? "Stop" : "Start";
         }
     }]);
 
@@ -40341,7 +40346,7 @@ var AppStore = (_class = function () {
 }), _descriptor7 = _applyDecoratedDescriptor(_class.prototype, "lastRoundScore", [_mobx.observable], {
     enumerable: true,
     initializer: null
-}), _applyDecoratedDescriptor(_class.prototype, "startGame", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startGame"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "startTimer", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startTimer"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeRoundTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeRoundTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeOverallTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeOverallTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableRoundTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableRoundTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableOverallTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableOverallTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableFastestTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableFastestTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableLastRoundTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableLastRoundTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "onButtonClick", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onButtonClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isInWinState", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "isInWinState"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "onWin", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onWin"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSavingHighScoreToLocal", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSavingHighScoreToLocal"), _class.prototype)), _class);
+}), _applyDecoratedDescriptor(_class.prototype, "startGame", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startGame"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "startRound", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "startRound"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeRoundTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeRoundTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "changeOverallTime", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "changeOverallTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableRoundTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableRoundTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableOverallTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableOverallTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableFastestTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableFastestTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "printableLastRoundTime", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "printableLastRoundTime"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "endRound", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "endRound"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isInWinState", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "isInWinState"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "onWin", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onWin"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "handleSavingHighScoreToLocal", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "handleSavingHighScoreToLocal"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "startStopButtonText", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "startStopButtonText"), _class.prototype)), _class);
 exports.default = AppStore;
 
 /***/ })

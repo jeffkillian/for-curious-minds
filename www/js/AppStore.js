@@ -11,19 +11,19 @@ export default class AppStore {
         console.log(
             "need to add ondeviceready?"
         )
-        this.state = "waiting"
+        this.state = "stopped"
         this.totalAttempts = 0
-        this.startGame()
     }
 
     @action startGame(){
         this.initialLaunchTime = Date.now()
         this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10)
-        this.state = "playing"
         this.fastestTimeEver = this.getFastestTimeEver() || ""
-        this.startTimer()
+        this.startRound()
     }
-    @action startTimer(){
+    @action startRound(){
+        if (!this.initialLaunchTime) return this.startGame()
+        this.state = "playing"
         this.roundTimerRunning = true
         this.totalAttempts++
         this.roundStartTime = Date.now()
@@ -57,14 +57,19 @@ export default class AppStore {
         return (time/ 1000).toFixed(3)
     }
 
-    @action onButtonClick() {
+    onStartStopClick() {
+        if (this.state == "playing") return this.endRound()
+        return this.startRound()
+    }
+
+    @action endRound(){
+        this.state = "stopped"
         clearInterval(this.roundTimer)
         this.roundTimerRunning = false
         if (this.roundTime == 1000){
             return this.onWin()
         }
         this.lastRoundScore = this.roundTime
-        this.startTimer()
     }
 
     @computed get isInWinState(){
@@ -86,13 +91,12 @@ export default class AppStore {
         
     }
 
+    @computed get startStopButtonText(){
+        return this.state == "playing" ? "Stop" : "Start"
+    }
+
     getFastestTimeEver(){
         return parseInt(localStorage.getItem("precision_high_score"))
     }
 
-
-    // toggleTimer(){
-    //     if (this.roundTimerRunnig) return this.stopTimer()
-    //     this.startTimer()
-    // }
 }

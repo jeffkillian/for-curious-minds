@@ -18,9 +18,9 @@ export default class AppContent extends React.Component {
         
                         <div className="button">
                             <button 
-                                onClick={store.onButtonClick.bind(store)}
+                                onMouseDown={store.onStartStopClick.bind(store)}
                                 type="button" className="btn btn-primary" disabled = {this.props.store.state == "won"}>
-                                Stop
+                                {this.props.store.startStopButtonText}
                                 
                             </button>
                         </div>
@@ -86,4 +86,6 @@ export default class AppContent extends React.Component {
             </div>
         )
     }
+
+
 }
