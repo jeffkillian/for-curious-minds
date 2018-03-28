@@ -1,13 +1,12 @@
 import { observable, action, computed } from "mobx"
 export default class AppStore {
     @observable roundTime = 0
-    @observable startTime
-    @observable timerRunning
-    @observable isBlindMode
+    @observable roundTimerRunning
     @observable overallTime
     @observable totalAttempts
     @observable state
     @observable fastestTimeEver
+    @observable lastRoundScore
     constructor(){
         console.log(
             "need to add ondeviceready?"
@@ -22,40 +21,50 @@ export default class AppStore {
         this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10)
         this.state = "playing"
         this.fastestTimeEver = this.getFastestTimeEver() || ""
+        this.startTimer()
     }
     @action startTimer(){
-        this.timerRunning = true
+        this.roundTimerRunning = true
         this.totalAttempts++
-        this.startTime = Date.now()
-        this.timer = setInterval(this.changeTime.bind(this), 10)
+        this.roundStartTime = Date.now()
+        this.roundTimer = setInterval(this.changeRoundTime.bind(this), 10)
     }
 
-    @action changeTime(){
-        this.roundTime = Date.now()-this.startTime
+    @action changeRoundTime(){
+        this.roundTime = Date.now()-this.roundStartTime
     }
     @action changeOverallTime(){    
         this.overallTime = Date.now() - this.initialLaunchTime
     }
 
-    @computed get printableTimeElapsed(){
+    @computed get printableRoundTime(){
         return this.printableTime(this.roundTime)
+    }
+
+    @computed get printableOverallTime(){
+        return this.printableTime(this.overallTime)
     }
 
     @computed get printableFastestTime(){
         return this.printableTime(this.fastestTimeEver)
     }
 
-    printableTime(time){
-        return (time/ 1000).toFixed(2)
+    @computed get printableLastRoundTime(){
+        return this.printableTime(this.lastRoundScore)
     }
 
-    @action stopTimer(){
-        clearInterval(this.timer)
-        this.timerRunning = false
-        if (this.roundTime < 1000){
-            this.onWin()
+    printableTime(time){
+        return (time/ 1000).toFixed(3)
+    }
+
+    @action onButtonClick() {
+        clearInterval(this.roundTimer)
+        this.roundTimerRunning = false
+        if (this.roundTime == 1000){
+            return this.onWin()
         }
-        
+        this.lastRoundScore = this.roundTime
+        this.startTimer()
     }
 
     @computed get isInWinState(){
@@ -70,11 +79,8 @@ export default class AppStore {
      }
 
      @action handleSavingHighScoreToLocal(){
-        var highScore = this.getFastestTimeEver()
-        debugger
-        if (!highScore || (this.elapsedTime < highScore) ) {
+        if (!highScore || (this.overallTime < this.getFastestTimeEver()) ) {
             localStorage.setItem('precision_high_score', this.elapsedTime);
-            debugger
             this.fastestTimeEver = this.getFastestTimeEver()
         }
         
@@ -84,24 +90,9 @@ export default class AppStore {
         return parseInt(localStorage.getItem("precision_high_score"))
     }
 
-    @action restart(){
-        this.state = "waiting"
-        this.totalAttempts = 0
-        this.startGame()
-    }
 
-    @action toggleBlindMode(){
-        this.isBlindMode = !this.isBlindMode
-
-    }
-
-    toggleTimer(){
-        if (this.timerRunning) return this.stopTimer()
-        this.startTimer()
-    }
-
-    @computed get buttonText(){
-        if (this.timerRunning) return "Stop"
-        return "Start"
-    }
+    // toggleTimer(){
+    //     if (this.roundTimerRunnig) return this.stopTimer()
+    //     this.startTimer()
+    // }
 }

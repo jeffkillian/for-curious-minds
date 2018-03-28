@@ -13,23 +13,31 @@ export default class AppContent extends React.Component {
                 {this.renderCrawler()}
                 <div className="title">Road to Precision</div>
                 {this.renderRoundTime()}
+                {this.renderLastRoundScore()}
                 <div> 
         
                         <div className="button">
                             <button 
-                                onClick={store.toggleTimer.bind(store)}
+                                onClick={store.onButtonClick.bind(store)}
                                 type="button" className="btn btn-primary" disabled = {this.props.store.state == "won"}>
-                                {store.buttonText}
+                                Stop
                                 
                             </button>
                         </div>
                         
                     {this.renderAttempts()}
-                    {this.renderRestart()}
                     {this.renderOverallTime()}
                     {this.renderFastestTimeEver()}
                 </div>
             </div>
+        )
+    }
+
+    renderLastRoundScore(){
+        return(
+            <div>
+                Last Round Score: {this.props.store.printableLastRoundTime}
+                </div>
         )
     }
 
@@ -50,19 +58,6 @@ export default class AppContent extends React.Component {
         )
     }
 
-    renderRestart(){
-        if (!this.props.store.isInWinState) return
-        return(
-            <div className="button">
-            <button 
-                onClick={this.props.store.restart.bind(this.props.store)}
-                type="button" className="btn btn-primary">
-                Restart
-            </button>
-        </div>
-        )
-    }
-
     renderAttempts(){
         return(
             <div>
@@ -78,9 +73,8 @@ export default class AppContent extends React.Component {
     }
 
     renderRoundTime(){
-        if (this.props.store.isBlindMode) return null
         return (<div className="currentTime">
-                {this.props.store.roundTime}
+                {this.props.store.printableRoundTime}
                 </div>
             )   
     }
@@ -88,7 +82,7 @@ export default class AppContent extends React.Component {
     renderOverallTime(){
         return(
             <div className="overall-elapsed-time">
-                {this.props.store.printableTimeElapsed}
+                {this.props.store.printableOverallTime}
             </div>
         )
     }
