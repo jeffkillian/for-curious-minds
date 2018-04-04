@@ -2,7 +2,7 @@ import { observable, action, computed } from "mobx"
 export default class AppStore {
     @observable roundTime = 0
     @observable roundTimerRunning
-    @observable overallTime
+    @observable overallTime = ""
     @observable totalAttempts
     @observable state
     @observable fastestTimeEver
@@ -12,10 +12,12 @@ export default class AppStore {
             "need to add ondeviceready?"
         )
         this.state = "stopped"
-        this.totalAttempts = 0
+
     }
 
     @action startGame(){
+        
+        this.totalAttempts = 0 
         this.initialLaunchTime = Date.now()
         this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10)
         this.fastestTimeEver = this.getFastestTimeEver() || ""
@@ -66,11 +68,15 @@ export default class AppStore {
         this.state = "stopped"
         clearInterval(this.roundTimer)
         this.roundTimerRunning = false
-        if (this.roundTime == 1000){
+        if (this.scoreIsAWinner()){
             return this.onWin()
         }
         this.lastRoundScore = this.roundTime
     }
+    scoreIsAWinner(){
+        return this.roundTime >990 && this.roundTime < 1010
+    }
+    
 
     @computed get isInWinState(){
         return this.state == "won";
@@ -84,8 +90,8 @@ export default class AppStore {
      }
 
      @action handleSavingHighScoreToLocal(){
-        if (!highScore || (this.overallTime < this.getFastestTimeEver()) ) {
-            localStorage.setItem('precision_high_score', this.elapsedTime);
+        if (!this.fastestTimeEver || (this.overallTime < this.getFastestTimeEver()) ) {
+            localStorage.setItem('precision_high_score', this.overallTime);
             this.fastestTimeEver = this.getFastestTimeEver()
         }
         
@@ -97,6 +103,15 @@ export default class AppStore {
 
     getFastestTimeEver(){
         return parseInt(localStorage.getItem("precision_high_score"))
+    }
+
+resetFastestTime(){
+        var r = confirm("Are you sure you want to reset?");
+        if (r == true) {
+            localStorage.removeItem('precision_high_score');
+            this.fastestTimeEver = this.getFastestTimeEver()
+        }
+
     }
 
 }

@@ -25,14 +25,65 @@ export default class AppContent extends React.Component {
                             </button>
                         </div>
                         
-                    {this.renderAttempts()}
-                    {this.renderOverallTime()}
                     {this.renderFastestTimeEver()}
+                    {this.renderResetFastestTimeEver()}
+                    {this.renderRestartButton()}
+
+                    {this.renderGrid()}
                 </div>
             </div>
         )
     }
 
+    renderGrid(){
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-xs-6">{this.renderTotalAttempts()}</div>
+                    <div className="col-xs-6">{this.renderOverallTime()}</div>
+
+                </div>
+                    <div className="row">
+                    <div className="col-xs-6">e</div>
+                    <div className="col-xs-6">g</div>
+            
+                </div>
+            </div>
+        )
+    }
+
+
+    renderTotalAttempts(){
+        return this.renderCellContent("Total Attempts", this.props.store.totalAttempts)
+    }
+
+    renderOverallTime(){
+      return this.renderCellContent("Overall Time",this.props.store.printableOverallTime)
+    }
+
+    renderCellContent(label, value){
+        return(
+            <div className="cell">
+                <label>{label}</label>
+                <div className="cell-value">{value}</div>
+            </div>
+        )
+    }
+
+    renderRestartButton(){
+        if (!this.props.store.isInWinState) return
+        return(
+            <div className="button">
+            <button 
+                onMouseDown={this.props.store.startGame.bind(this.props.store)}
+                type="button" className="btn btn-primary" >
+               Restart game
+                
+            </button>
+        </div>
+        )
+    }
+    
     renderLastRoundScore(){
         return(
             <div>
@@ -61,7 +112,7 @@ export default class AppContent extends React.Component {
     renderAttempts(){
         return(
             <div>
-                Total Attempts: {this.props.store.totalAttempts}
+                
                 </div>
         )
     }
@@ -79,10 +130,16 @@ export default class AppContent extends React.Component {
             )   
     }
 
-    renderOverallTime(){
+
+    renderResetFastestTimeEver(){
         return(
-            <div className="overall-elapsed-time">
-                {this.props.store.printableOverallTime}
+            <div className="button">
+                    <button 
+                        onMouseDown={this.props.store.resetFastestTime.bind(this.props.store)}
+                        type="button" className="btn btn-primary">
+                        Reset Fastest Time
+                        
+                    </button>
             </div>
         )
     }

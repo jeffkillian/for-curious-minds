@@ -20270,9 +20270,90 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                             this.props.store.startStopButtonText
                         )
                     ),
-                    this.renderAttempts(),
-                    this.renderOverallTime(),
-                    this.renderFastestTimeEver()
+                    this.renderFastestTimeEver(),
+                    this.renderResetFastestTimeEver(),
+                    this.renderRestartButton(),
+                    this.renderGrid()
+                )
+            );
+        }
+    }, {
+        key: "renderGrid",
+        value: function renderGrid() {
+            return _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(
+                    "div",
+                    { className: "row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-6" },
+                        this.renderTotalAttempts()
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-6" },
+                        this.renderOverallTime()
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-6" },
+                        "e"
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-6" },
+                        "g"
+                    )
+                )
+            );
+        }
+    }, {
+        key: "renderTotalAttempts",
+        value: function renderTotalAttempts() {
+            return this.renderCellContent("Total Attempts", this.props.store.totalAttempts);
+        }
+    }, {
+        key: "renderOverallTime",
+        value: function renderOverallTime() {
+            return this.renderCellContent("Overall Time", this.props.store.printableOverallTime);
+        }
+    }, {
+        key: "renderCellContent",
+        value: function renderCellContent(label, value) {
+            return _react2.default.createElement(
+                "div",
+                { className: "cell" },
+                _react2.default.createElement(
+                    "label",
+                    null,
+                    label
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "cell-value" },
+                    value
+                )
+            );
+        }
+    }, {
+        key: "renderRestartButton",
+        value: function renderRestartButton() {
+            if (!this.props.store.isInWinState) return;
+            return _react2.default.createElement(
+                "div",
+                { className: "button" },
+                _react2.default.createElement(
+                    "button",
+                    {
+                        onMouseDown: this.props.store.startGame.bind(this.props.store),
+                        type: "button", className: "btn btn-primary" },
+                    "Restart game"
                 )
             );
         }
@@ -20310,12 +20391,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     }, {
         key: "renderAttempts",
         value: function renderAttempts() {
-            return _react2.default.createElement(
-                "div",
-                null,
-                "Total Attempts: ",
-                this.props.store.totalAttempts
-            );
+            return _react2.default.createElement("div", null);
         }
     }, {
         key: "renderNew",
@@ -20337,12 +20413,18 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
             );
         }
     }, {
-        key: "renderOverallTime",
-        value: function renderOverallTime() {
+        key: "renderResetFastestTimeEver",
+        value: function renderResetFastestTimeEver() {
             return _react2.default.createElement(
                 "div",
-                { className: "overall-elapsed-time" },
-                this.props.store.printableOverallTime
+                { className: "button" },
+                _react2.default.createElement(
+                    "button",
+                    {
+                        onMouseDown: this.props.store.resetFastestTime.bind(this.props.store),
+                        type: "button", className: "btn btn-primary" },
+                    "Reset Fastest Time"
+                )
             );
         }
     }]);
@@ -40216,12 +40298,13 @@ var AppStore = (_class = function () {
 
         console.log("need to add ondeviceready?");
         this.state = "stopped";
-        this.totalAttempts = 0;
     }
 
     _createClass(AppStore, [{
         key: "startGame",
         value: function startGame() {
+
+            this.totalAttempts = 0;
             this.initialLaunchTime = Date.now();
             this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10);
             this.fastestTimeEver = this.getFastestTimeEver() || "";
@@ -40264,10 +40347,15 @@ var AppStore = (_class = function () {
             this.state = "stopped";
             clearInterval(this.roundTimer);
             this.roundTimerRunning = false;
-            if (this.roundTime == 1000) {
+            if (this.scoreIsAWinner()) {
                 return this.onWin();
             }
             this.lastRoundScore = this.roundTime;
+        }
+    }, {
+        key: "scoreIsAWinner",
+        value: function scoreIsAWinner() {
+            return this.roundTime > 990 && this.roundTime < 1010;
         }
     }, {
         key: "onWin",
@@ -40280,8 +40368,8 @@ var AppStore = (_class = function () {
     }, {
         key: "handleSavingHighScoreToLocal",
         value: function handleSavingHighScoreToLocal() {
-            if (!highScore || this.overallTime < this.getFastestTimeEver()) {
-                localStorage.setItem('precision_high_score', this.elapsedTime);
+            if (!this.fastestTimeEver || this.overallTime < this.getFastestTimeEver()) {
+                localStorage.setItem('precision_high_score', this.overallTime);
                 this.fastestTimeEver = this.getFastestTimeEver();
             }
         }
@@ -40289,6 +40377,15 @@ var AppStore = (_class = function () {
         key: "getFastestTimeEver",
         value: function getFastestTimeEver() {
             return parseInt(localStorage.getItem("precision_high_score"));
+        }
+    }, {
+        key: "resetFastestTime",
+        value: function resetFastestTime() {
+            var r = confirm("Are you sure you want to reset?");
+            if (r == true) {
+                localStorage.removeItem('precision_high_score');
+                this.fastestTimeEver = this.getFastestTimeEver();
+            }
         }
     }, {
         key: "printableRoundTime",
@@ -40333,7 +40430,9 @@ var AppStore = (_class = function () {
     initializer: null
 }), _descriptor3 = _applyDecoratedDescriptor(_class.prototype, "overallTime", [_mobx.observable], {
     enumerable: true,
-    initializer: null
+    initializer: function initializer() {
+        return "";
+    }
 }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "totalAttempts", [_mobx.observable], {
     enumerable: true,
     initializer: null
