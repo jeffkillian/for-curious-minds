@@ -53,6 +53,9 @@
     -webkit-transform: rotate(359deg);
   }
 }
+.small-font {
+  font-size: 12px !important;
+}
 /* The animation code */
 @keyframes example {
   0% {

@@ -37,9 +37,6 @@ export default class AppContent extends React.Component {
                     <div className="col-xs-6">{this.renderFastestTimeEver()}</div>
             
                 </div>
-                <div className="row">
-                    <div className="col-xs-12">{this.renderButtonResetFastestTime()}</div>
-                </div>
 
 
             </div>
@@ -67,6 +64,7 @@ export default class AppContent extends React.Component {
     }
 
     renderWow(){
+        if (!this.props.store.isInWinState) return
         return (
             <img className="wow-image" src="img/wow.png" />
         )
@@ -99,11 +97,17 @@ export default class AppContent extends React.Component {
     }
 
     renderFastestTimeEver(){
-        return this.renderCellContent("Overall Best Time", this.props.store.printableFastestTime)
+        return(
+            <div className="cell">
+                <label>Overall Best Time</label>
+                <div className="cell-value">{this.props.store.printableFastestTime}</div>
+                {this.renderButtonResetFastestTime()}
+            </div>
+        )
     }
 
     renderWin(){
-        //if (!this.props.store.isInWinState) return
+        if (!this.props.store.isInWinState) return
         return(
             <div>
                 {this.renderCrawler()}
@@ -140,7 +144,7 @@ export default class AppContent extends React.Component {
             <div className="button">
                     <button 
                         onMouseDown={this.props.store.resetFastestTime.bind(this.props.store)}
-                        type="button" className="btn btn-primary">
+                        type="button" className="small-font btn btn-primary">
                         Reset Fastest Time
                         
                     </button>

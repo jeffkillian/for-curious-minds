@@ -20310,15 +20310,6 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                         { className: "col-xs-6" },
                         this.renderFastestTimeEver()
                     )
-                ),
-                _react2.default.createElement(
-                    "div",
-                    { className: "row" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "col-xs-12" },
-                        this.renderButtonResetFastestTime()
-                    )
                 )
             );
         }
@@ -20348,6 +20339,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     }, {
         key: "renderWow",
         value: function renderWow() {
+            if (!this.props.store.isInWinState) return;
             return _react2.default.createElement("img", { className: "wow-image", src: "img/wow.png" });
         }
     }, {
@@ -20392,12 +20384,26 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     }, {
         key: "renderFastestTimeEver",
         value: function renderFastestTimeEver() {
-            return this.renderCellContent("Overall Best Time", this.props.store.printableFastestTime);
+            return _react2.default.createElement(
+                "div",
+                { className: "cell" },
+                _react2.default.createElement(
+                    "label",
+                    null,
+                    "Overall Best Time"
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "cell-value" },
+                    this.props.store.printableFastestTime
+                ),
+                this.renderButtonResetFastestTime()
+            );
         }
     }, {
         key: "renderWin",
         value: function renderWin() {
-            //if (!this.props.store.isInWinState) return
+            if (!this.props.store.isInWinState) return;
             return _react2.default.createElement(
                 "div",
                 null,
@@ -20438,7 +20444,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     "button",
                     {
                         onMouseDown: this.props.store.resetFastestTime.bind(this.props.store),
-                        type: "button", className: "btn btn-primary" },
+                        type: "button", className: "small-font btn btn-primary" },
                     "Reset Fastest Time"
                 )
             );
