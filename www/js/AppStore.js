@@ -12,7 +12,7 @@ export default class AppStore {
             "need to add ondeviceready?"
         )
         this.state = "stopped"
-
+        this.fastestTimeEver = this.getFastestTimeEver() || ""
     }
 
     @action startGame(){
@@ -20,7 +20,7 @@ export default class AppStore {
         this.totalAttempts = 0 
         this.initialLaunchTime = Date.now()
         this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10)
-        this.fastestTimeEver = this.getFastestTimeEver() || ""
+
         this.startRound()
     }
     @action startRound(){
@@ -88,7 +88,6 @@ export default class AppStore {
         this.state = "won"
         this.handleSavingHighScoreToLocal()
         clearInterval(this.overallTimer)
-        let timeInt = 3000  
      }
 
      @action handleSavingHighScoreToLocal(){

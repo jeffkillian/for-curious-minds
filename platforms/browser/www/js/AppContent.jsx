@@ -5,28 +5,15 @@ import "jquery"
 @inject("store") @observer
 export default class AppContent extends React.Component {
 
-
     render(){
-        const store = this.props.store
+
         return(
             <div>
-                {this.renderCrawler()}
-                <div className="title">Road to Precision</div>
+                {this.renderWin()}
+                <div className="title">Curiosity</div>
                 {this.renderRoundTime()}
-                <div> 
-        
-                        <div className="button">
-                            <button 
-                                onMouseDown={store.onStartStopClick.bind(store)}
-                                type="button" className="btn btn-primary" disabled = {this.props.store.state == "won"}>
-                                {this.props.store.startStopButtonText}
-                                
-                            </button>
-                        </div>
-
-
-                    {this.renderGrid()}
-                </div>
+                {this.renderGrid()}
+                {this.renderWow()}
             </div>
         )
     }
@@ -34,7 +21,12 @@ export default class AppContent extends React.Component {
     renderGrid(){
         return (
             <div>
-
+                <div className="row">
+                    <div className="col-xs-12 button">{this.renderStartStopButton()}</div>
+                </div>
+                <div className="row">
+                    <div className="col-xs-12">{this.renderRestartButton()}</div>
+                </div>
                 <div className="row">
                     <div className="col-xs-6">{this.renderTotalAttempts()}</div>
                     <div className="col-xs-6">{this.renderOverallTime()}</div>
@@ -48,12 +40,21 @@ export default class AppContent extends React.Component {
                 <div className="row">
                     <div className="col-xs-12">{this.renderButtonResetFastestTime()}</div>
                 </div>
-                <div className="row">
-                    <div className="col-xs-12">{this.renderRestartButton()}</div>
-                </div>
+
 
             </div>
         )
+    }
+
+    renderStartStopButton(){
+        const store = this.props.store
+        const buttonClass = store.state == "playing" ? "danger" : "success"
+        return(
+                <button 
+                    onMouseDown={store.onStartStopClick.bind(store)}
+                    type="button" className={`btn btn-${buttonClass} start-button`} disabled = {this.props.store.state == "won"}>
+                    {this.props.store.startStopButtonText}        
+                </button>)
     }
 
 
@@ -63,6 +64,12 @@ export default class AppContent extends React.Component {
 
     renderOverallTime(){
       return this.renderCellContent("Overall Time",this.props.store.printableOverallTime)
+    }
+
+    renderWow(){
+        return (
+            <img className="wow-image" src="img/wow.png" />
+        )
     }
 
     renderCellContent(label, value){
@@ -80,7 +87,7 @@ export default class AppContent extends React.Component {
             <button 
                 disabled ={!this.props.store.isInWinState}
                 onMouseDown={this.props.store.startGame.bind(this.props.store)}
-                type="button" className="btn btn-primary" >
+                type="button" className="btn btn-secondary" >
                Restart game
             </button>
         </div>
@@ -95,8 +102,17 @@ export default class AppContent extends React.Component {
         return this.renderCellContent("Overall Best Time", this.props.store.printableFastestTime)
     }
 
+    renderWin(){
+        //if (!this.props.store.isInWinState) return
+        return(
+            <div>
+                {this.renderCrawler()}
+            </div>
+        )
+    }
+
     renderCrawler(){
-        if (!this.props.store.isInWinState) return
+        
         return(<div className="imageSize crawlImage">
                 <img src="/www/img/banana-cluster.png" className="imageSize"/>
                 </div>
@@ -108,12 +124,6 @@ export default class AppContent extends React.Component {
             <div>
                 
                 </div>
-        )
-    }
-    renderNew(){
-        if (!this.props.store.newHighScore) return null
-        return (
-            <span>NEW</span>
         )
     }
 

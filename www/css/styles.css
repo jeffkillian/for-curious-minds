@@ -1,16 +1,21 @@
-/* @font-face {
-    font-family: "Josefin";
-    src: url("JosefinSans-Regular.ttf") format("truetype");   
+@font-face {
+  font-family: "Poppins";
+  src: url("Poppins-Regular.ttf") format("truetype");
 }
-.appContents {
-    font-family: "Josefin";
-} */
+@font-face {
+  font-family: "OxygenMono";
+  src: url("OxygenMono-Regular.ttf") format("truetype");
+}
+#appContents {
+  font-family: "Poppins";
+}
 .title {
   text-align: center;
   font-size: 20px;
   margin-top: 20px;
 }
 .currentTime {
+  font-family: "OxygenMono";
   text-align: center;
   font-size: 40px;
   margin: 36px 0px;
@@ -21,14 +26,32 @@
   text-align: center;
   margin-bottom: 10px;
 }
+.start-button {
+  padding: 20px;
+  width: 40%;
+}
 .cell {
   text-align: center;
-  margin: 5px;
+  margin-bottom: 8px;
   padding: 13px;
   background: rgba(80, 108, 172, 0.25);
 }
 .cell .cell-value {
   font-size: 23px;
+  font-family: "OxygenMono";
+}
+.wow-image {
+  -webkit-animation: rotation 8s infinite linear;
+  width: 89%;
+  margin-top: 125px;
+}
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+  }
 }
 /* The animation code */
 @keyframes example {

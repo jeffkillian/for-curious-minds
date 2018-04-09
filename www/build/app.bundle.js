@@ -20244,33 +20244,19 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     _createClass(AppContent, [{
         key: "render",
         value: function render() {
-            var store = this.props.store;
+
             return _react2.default.createElement(
                 "div",
                 null,
-                this.renderCrawler(),
+                this.renderWin(),
                 _react2.default.createElement(
                     "div",
                     { className: "title" },
-                    "Road to Precision"
+                    "Curiosity"
                 ),
                 this.renderRoundTime(),
-                _react2.default.createElement(
-                    "div",
-                    null,
-                    _react2.default.createElement(
-                        "div",
-                        { className: "button" },
-                        _react2.default.createElement(
-                            "button",
-                            {
-                                onMouseDown: store.onStartStopClick.bind(store),
-                                type: "button", className: "btn btn-primary", disabled: this.props.store.state == "won" },
-                            this.props.store.startStopButtonText
-                        )
-                    ),
-                    this.renderGrid()
-                )
+                this.renderGrid(),
+                this.renderWow()
             );
         }
     }, {
@@ -20279,6 +20265,24 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
             return _react2.default.createElement(
                 "div",
                 null,
+                _react2.default.createElement(
+                    "div",
+                    { className: "row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-12 button" },
+                        this.renderStartStopButton()
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-12" },
+                        this.renderRestartButton()
+                    )
+                ),
                 _react2.default.createElement(
                     "div",
                     { className: "row" },
@@ -20315,16 +20319,20 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                         { className: "col-xs-12" },
                         this.renderButtonResetFastestTime()
                     )
-                ),
-                _react2.default.createElement(
-                    "div",
-                    { className: "row" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "col-xs-12" },
-                        this.renderRestartButton()
-                    )
                 )
+            );
+        }
+    }, {
+        key: "renderStartStopButton",
+        value: function renderStartStopButton() {
+            var store = this.props.store;
+            var buttonClass = store.state == "playing" ? "danger" : "success";
+            return _react2.default.createElement(
+                "button",
+                {
+                    onMouseDown: store.onStartStopClick.bind(store),
+                    type: "button", className: "btn btn-" + buttonClass + " start-button", disabled: this.props.store.state == "won" },
+                this.props.store.startStopButtonText
             );
         }
     }, {
@@ -20336,6 +20344,11 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
         key: "renderOverallTime",
         value: function renderOverallTime() {
             return this.renderCellContent("Overall Time", this.props.store.printableOverallTime);
+        }
+    }, {
+        key: "renderWow",
+        value: function renderWow() {
+            return _react2.default.createElement("img", { className: "wow-image", src: "img/wow.png" });
         }
     }, {
         key: "renderCellContent",
@@ -20366,7 +20379,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     {
                         disabled: !this.props.store.isInWinState,
                         onMouseDown: this.props.store.startGame.bind(this.props.store),
-                        type: "button", className: "btn btn-primary" },
+                        type: "button", className: "btn btn-secondary" },
                     "Restart game"
                 )
             );
@@ -20382,9 +20395,19 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
             return this.renderCellContent("Overall Best Time", this.props.store.printableFastestTime);
         }
     }, {
+        key: "renderWin",
+        value: function renderWin() {
+            //if (!this.props.store.isInWinState) return
+            return _react2.default.createElement(
+                "div",
+                null,
+                this.renderCrawler()
+            );
+        }
+    }, {
         key: "renderCrawler",
         value: function renderCrawler() {
-            if (!this.props.store.isInWinState) return;
+
             return _react2.default.createElement(
                 "div",
                 { className: "imageSize crawlImage" },
@@ -20395,16 +20418,6 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
         key: "renderAttempts",
         value: function renderAttempts() {
             return _react2.default.createElement("div", null);
-        }
-    }, {
-        key: "renderNew",
-        value: function renderNew() {
-            if (!this.props.store.newHighScore) return null;
-            return _react2.default.createElement(
-                "span",
-                null,
-                "NEW"
-            );
         }
     }, {
         key: "renderRoundTime",
@@ -40301,6 +40314,7 @@ var AppStore = (_class = function () {
 
         console.log("need to add ondeviceready?");
         this.state = "stopped";
+        this.fastestTimeEver = this.getFastestTimeEver() || "";
     }
 
     _createClass(AppStore, [{
@@ -40310,7 +40324,7 @@ var AppStore = (_class = function () {
             this.totalAttempts = 0;
             this.initialLaunchTime = Date.now();
             this.overallTimer = setInterval(this.changeOverallTime.bind(this), 10);
-            this.fastestTimeEver = this.getFastestTimeEver() || "";
+
             this.startRound();
         }
     }, {
@@ -40366,7 +40380,6 @@ var AppStore = (_class = function () {
             this.state = "won";
             this.handleSavingHighScoreToLocal();
             clearInterval(this.overallTimer);
-            var timeInt = 3000;
         }
     }, {
         key: "handleSavingHighScoreToLocal",
