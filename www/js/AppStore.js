@@ -3,7 +3,7 @@ export default class AppStore {
     @observable roundTime = 0
     @observable roundTimerRunning
     @observable overallTime = ""
-    @observable totalAttempts
+    @observable totalAttempts = 0
     @observable state
     @observable fastestTimeEver
     @observable lastRoundScore
@@ -48,10 +48,12 @@ export default class AppStore {
     }
 
     @computed get printableFastestTime(){
+        if (!this.fastestTimeEver) return "-"
         return this.printableTime(this.fastestTimeEver)
     }
 
     @computed get printableLastRoundTime(){
+        if (!this.lastRoundScore) return "-"
         return this.printableTime(this.lastRoundScore)
     }
 

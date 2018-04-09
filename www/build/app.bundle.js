@@ -20255,7 +20255,6 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     "Road to Precision"
                 ),
                 this.renderRoundTime(),
-                this.renderLastRoundScore(),
                 _react2.default.createElement(
                     "div",
                     null,
@@ -20270,9 +20269,6 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                             this.props.store.startStopButtonText
                         )
                     ),
-                    this.renderFastestTimeEver(),
-                    this.renderResetFastestTimeEver(),
-                    this.renderRestartButton(),
                     this.renderGrid()
                 )
             );
@@ -20303,12 +20299,30 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     _react2.default.createElement(
                         "div",
                         { className: "col-xs-6" },
-                        "e"
+                        this.renderLastRoundScore()
                     ),
                     _react2.default.createElement(
                         "div",
                         { className: "col-xs-6" },
-                        "g"
+                        this.renderFastestTimeEver()
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-12" },
+                        this.renderButtonResetFastestTime()
+                    )
+                ),
+                _react2.default.createElement(
+                    "div",
+                    { className: "row" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "col-xs-12" },
+                        this.renderRestartButton()
                     )
                 )
             );
@@ -20344,13 +20358,13 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     }, {
         key: "renderRestartButton",
         value: function renderRestartButton() {
-            if (!this.props.store.isInWinState) return;
             return _react2.default.createElement(
                 "div",
                 { className: "button" },
                 _react2.default.createElement(
                     "button",
                     {
+                        disabled: !this.props.store.isInWinState,
                         onMouseDown: this.props.store.startGame.bind(this.props.store),
                         type: "button", className: "btn btn-primary" },
                     "Restart game"
@@ -20360,23 +20374,12 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
     }, {
         key: "renderLastRoundScore",
         value: function renderLastRoundScore() {
-            return _react2.default.createElement(
-                "div",
-                null,
-                "Last Round Score: ",
-                this.props.store.printableLastRoundTime
-            );
+            return this.renderCellContent("Last Round Score", this.props.store.printableLastRoundTime);
         }
     }, {
         key: "renderFastestTimeEver",
         value: function renderFastestTimeEver() {
-            if (!this.props.store.fastestTimeEver) return null;
-            return _react2.default.createElement(
-                "div",
-                null,
-                "Overall best time: ",
-                this.props.store.printableFastestTime
-            );
+            return this.renderCellContent("Overall Best Time", this.props.store.printableFastestTime);
         }
     }, {
         key: "renderCrawler",
@@ -20413,8 +20416,8 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
             );
         }
     }, {
-        key: "renderResetFastestTimeEver",
-        value: function renderResetFastestTimeEver() {
+        key: "renderButtonResetFastestTime",
+        value: function renderButtonResetFastestTime() {
             return _react2.default.createElement(
                 "div",
                 { className: "button" },
@@ -40400,11 +40403,13 @@ var AppStore = (_class = function () {
     }, {
         key: "printableFastestTime",
         get: function get() {
+            if (!this.fastestTimeEver) return "-";
             return this.printableTime(this.fastestTimeEver);
         }
     }, {
         key: "printableLastRoundTime",
         get: function get() {
+            if (!this.lastRoundScore) return "-";
             return this.printableTime(this.lastRoundScore);
         }
     }, {
@@ -40435,7 +40440,9 @@ var AppStore = (_class = function () {
     }
 }), _descriptor4 = _applyDecoratedDescriptor(_class.prototype, "totalAttempts", [_mobx.observable], {
     enumerable: true,
-    initializer: null
+    initializer: function initializer() {
+        return 0;
+    }
 }), _descriptor5 = _applyDecoratedDescriptor(_class.prototype, "state", [_mobx.observable], {
     enumerable: true,
     initializer: null

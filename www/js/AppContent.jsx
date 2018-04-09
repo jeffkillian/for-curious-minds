@@ -13,7 +13,6 @@ export default class AppContent extends React.Component {
                 {this.renderCrawler()}
                 <div className="title">Road to Precision</div>
                 {this.renderRoundTime()}
-                {this.renderLastRoundScore()}
                 <div> 
         
                         <div className="button">
@@ -24,10 +23,7 @@ export default class AppContent extends React.Component {
                                 
                             </button>
                         </div>
-                        
-                    {this.renderFastestTimeEver()}
-                    {this.renderResetFastestTimeEver()}
-                    {this.renderRestartButton()}
+
 
                     {this.renderGrid()}
                 </div>
@@ -38,16 +34,24 @@ export default class AppContent extends React.Component {
     renderGrid(){
         return (
             <div>
+
                 <div className="row">
                     <div className="col-xs-6">{this.renderTotalAttempts()}</div>
                     <div className="col-xs-6">{this.renderOverallTime()}</div>
 
                 </div>
-                    <div className="row">
-                    <div className="col-xs-6">e</div>
-                    <div className="col-xs-6">g</div>
+                <div className="row">
+                    <div className="col-xs-6">{this.renderLastRoundScore()}</div>
+                    <div className="col-xs-6">{this.renderFastestTimeEver()}</div>
             
                 </div>
+                <div className="row">
+                    <div className="col-xs-12">{this.renderButtonResetFastestTime()}</div>
+                </div>
+                <div className="row">
+                    <div className="col-xs-12">{this.renderRestartButton()}</div>
+                </div>
+
             </div>
         )
     }
@@ -71,34 +75,24 @@ export default class AppContent extends React.Component {
     }
 
     renderRestartButton(){
-        if (!this.props.store.isInWinState) return
         return(
             <div className="button">
             <button 
+                disabled ={!this.props.store.isInWinState}
                 onMouseDown={this.props.store.startGame.bind(this.props.store)}
                 type="button" className="btn btn-primary" >
                Restart game
-                
             </button>
         </div>
         )
     }
     
     renderLastRoundScore(){
-        return(
-            <div>
-                Last Round Score: {this.props.store.printableLastRoundTime}
-                </div>
-        )
+        return this.renderCellContent("Last Round Score",this.props.store.printableLastRoundTime)
     }
 
     renderFastestTimeEver(){
-        if (!this.props.store.fastestTimeEver) return null
-        return (
-            <div>
-                Overall best time: {this.props.store.printableFastestTime}
-                </div>
-        )
+        return this.renderCellContent("Overall Best Time", this.props.store.printableFastestTime)
     }
 
     renderCrawler(){
@@ -131,7 +125,7 @@ export default class AppContent extends React.Component {
     }
 
 
-    renderResetFastestTimeEver(){
+    renderButtonResetFastestTime(){
         return(
             <div className="button">
                     <button 

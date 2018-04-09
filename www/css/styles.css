@@ -19,9 +19,13 @@
 }
 .button {
   text-align: center;
+  margin-bottom: 10px;
 }
 .cell {
   text-align: center;
+  margin: 5px;
+  padding: 13px;
+  background: rgba(80, 108, 172, 0.25);
 }
 .cell .cell-value {
   font-size: 23px;
