@@ -20249,11 +20249,6 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                 "div",
                 null,
                 this.renderWin(),
-                _react2.default.createElement(
-                    "div",
-                    { className: "title" },
-                    "Curiosity"
-                ),
                 this.renderRoundTime(),
                 this.renderGrid(),
                 this.renderWow()
@@ -20271,6 +20266,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     _react2.default.createElement(
                         "div",
                         { className: "col-xs-12 button" },
+                        "Level 1: Get close to 1 second",
                         this.renderStartStopButton()
                     )
                 ),
@@ -20396,8 +20392,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     "div",
                     { className: "cell-value" },
                     this.props.store.printableFastestTime
-                ),
-                this.renderButtonResetFastestTime()
+                )
             );
         }
     }, {
@@ -20432,21 +20427,6 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                 "div",
                 { className: "currentTime" },
                 this.props.store.printableRoundTime
-            );
-        }
-    }, {
-        key: "renderButtonResetFastestTime",
-        value: function renderButtonResetFastestTime() {
-            return _react2.default.createElement(
-                "div",
-                { className: "button" },
-                _react2.default.createElement(
-                    "button",
-                    {
-                        onMouseDown: this.props.store.resetFastestTime.bind(this.props.store),
-                        type: "button", className: "btn btn-primary" },
-                    "Reset"
-                )
             );
         }
     }]);
@@ -40378,7 +40358,6 @@ var AppStore = (_class = function () {
     }, {
         key: "scoreIsAWinner",
         value: function scoreIsAWinner() {
-            return this.roundTime < 1000;
             return this.roundTime > 990 && this.roundTime < 1010;
         }
     }, {

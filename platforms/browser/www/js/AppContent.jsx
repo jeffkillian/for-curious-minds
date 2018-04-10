@@ -10,7 +10,6 @@ export default class AppContent extends React.Component {
         return(
             <div>
                 {this.renderWin()}
-                <div className="title">Curiosity</div>
                 {this.renderRoundTime()}
                 {this.renderGrid()}
                 {this.renderWow()}
@@ -22,7 +21,9 @@ export default class AppContent extends React.Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-xs-12 button">{this.renderStartStopButton()}</div>
+                    <div className="col-xs-12 button">
+                    Level 1: Get close to 1 second
+                    {this.renderStartStopButton()}</div>
                 </div>
                 <div className="row">
                     <div className="col-xs-12">{this.renderRestartButton()}</div>
@@ -101,7 +102,6 @@ export default class AppContent extends React.Component {
             <div className="cell">
                 <label>Overall Best Time</label>
                 <div className="cell-value">{this.props.store.printableFastestTime}</div>
-                {this.renderButtonResetFastestTime()}
             </div>
         )
     }
@@ -136,20 +136,6 @@ export default class AppContent extends React.Component {
                 {this.props.store.printableRoundTime}
                 </div>
             )   
-    }
-
-
-    renderButtonResetFastestTime(){
-        return(
-            <div className="button">
-                    <button 
-                        onMouseDown={this.props.store.resetFastestTime.bind(this.props.store)}
-                        type="button" className="btn btn-primary">
-                        Reset
-                        
-                    </button>
-            </div>
-        )
     }
 
 
