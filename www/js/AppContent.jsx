@@ -22,7 +22,7 @@ export default class AppContent extends React.Component {
             <div>
                 <div className="row">
                     <div className="col-xs-12 button">
-                    Level 1: Get close to 1 second
+                    Level 1: 1 second(ish)
                     {this.renderStartStopButton()}</div>
                 </div>
                 <div className="row">

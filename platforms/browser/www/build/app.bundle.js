@@ -20266,7 +20266,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     _react2.default.createElement(
                         "div",
                         { className: "col-xs-12 button" },
-                        "Level 1: Get close to 1 second",
+                        "Level 1: 1 second(ish)",
                         this.renderStartStopButton()
                     )
                 ),
