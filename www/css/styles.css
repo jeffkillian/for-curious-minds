@@ -28,7 +28,8 @@
 }
 .start-button {
   padding: 20px;
-  width: 40%;
+  width: 60%;
+  height: 75px;
 }
 .cell {
   text-align: center;
@@ -52,9 +53,6 @@
   to {
     -webkit-transform: rotate(359deg);
   }
-}
-.small-font {
-  font-size: 12px !important;
 }
 /* The animation code */
 @keyframes example {

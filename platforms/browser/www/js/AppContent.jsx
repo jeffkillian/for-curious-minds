@@ -118,7 +118,7 @@ export default class AppContent extends React.Component {
     renderCrawler(){
         
         return(<div className="imageSize crawlImage">
-                <img src="/www/img/banana-cluster.png" className="imageSize"/>
+                <img src="img/banana-cluster.png" className="imageSize"/>
                 </div>
         )
     }
@@ -144,8 +144,8 @@ export default class AppContent extends React.Component {
             <div className="button">
                     <button 
                         onMouseDown={this.props.store.resetFastestTime.bind(this.props.store)}
-                        type="button" className="small-font btn btn-primary">
-                        Reset Fastest Time
+                        type="button" className="btn btn-primary">
+                        Reset
                         
                     </button>
             </div>

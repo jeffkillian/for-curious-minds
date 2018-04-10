@@ -20417,7 +20417,7 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
             return _react2.default.createElement(
                 "div",
                 { className: "imageSize crawlImage" },
-                _react2.default.createElement("img", { src: "/www/img/banana-cluster.png", className: "imageSize" })
+                _react2.default.createElement("img", { src: "img/banana-cluster.png", className: "imageSize" })
             );
         }
     }, {
@@ -20444,8 +20444,8 @@ var AppContent = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mob
                     "button",
                     {
                         onMouseDown: this.props.store.resetFastestTime.bind(this.props.store),
-                        type: "button", className: "small-font btn btn-primary" },
-                    "Reset Fastest Time"
+                        type: "button", className: "btn btn-primary" },
+                    "Reset"
                 )
             );
         }
@@ -40378,6 +40378,7 @@ var AppStore = (_class = function () {
     }, {
         key: "scoreIsAWinner",
         value: function scoreIsAWinner() {
+            return this.roundTime < 1000;
             return this.roundTime > 990 && this.roundTime < 1010;
         }
     }, {

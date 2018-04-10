@@ -76,6 +76,7 @@ export default class AppStore {
         this.lastRoundScore = this.roundTime
     }
     scoreIsAWinner(){
+        return this.roundTime < 1000
         return this.roundTime >990 && this.roundTime < 1010
     }
     
