@@ -87,6 +87,10 @@
     100% {background-color:red; left:0px; top:0px;}
 }
 
+.bg-red {
+    background-color: red;
+}
+
 .crawlImage {
     position:absolute;
     animation-name: example;
@@ -100,5 +104,130 @@
     height:85px;
 }
 
+.centered {
+    padding-top: 50%;
+    padding-bottom: 50%;
+    text-align: center;
+}
+
+.hcentered {
+    text-align: center;
+}
+
+.lightUp {
+   // border: 1px solid black;
+    height:50px;
+    width:11%;
+    display: inline-block;
+    transition: background-color 0.5s ease;
 
 
+
+}
+
+.highlighted{
+    animation: colorchange 1s; /* animation-name followed by duration in seconds*/
+    /* you could also use milliseconds (ms) or something like 2.5s */
+    -webkit-animation: colorchange 1s; /* Chrome and Safari */
+}
+
+    @keyframes colorchange
+    {
+    0%   {background: red;}
+    100% {background: white;}
+    }
+
+    @-webkit-keyframes colorchange /* Safari and Chrome - necessary duplicate */
+    {
+        0%   {background: red;}
+        100% {background: white;}
+    }
+  
+
+
+.touch {
+   // border: 1px solid black;
+    height:50px;
+    width:50px;
+    position: absolute;
+}
+
+.touch1{
+    top:20px; 
+    left:20px;
+}
+
+.touch2{
+    top: 200px; 
+    left:150px;
+}
+.touch3{
+    top: 87px;
+    left: 85px;
+
+}
+.touch4{
+    top: 251px;
+    left: -237px;
+}
+.touch5{
+    top: 303.3px;
+    left: 150px;
+}
+.touch6{
+    top: 82px;
+    left: 50px;
+}
+.touch7{
+    top: -35px;
+    left: 41px;
+}
+
+.touch8{
+    top: 333px;
+    left: -230px;
+}
+.touch9{
+    top: 0px; 
+    left:0px;
+}
+
+
+
+
+
+@base: 1em;
+
+.margin-none { margin: 0 !important ;}
+
+.margin-top-none { margin-top: 0 !important; }
+.margin-top-quarter { margin-top: @base/4; }
+.margin-top-half { margin-top: @base/2; }
+.margin-top-one { margin-top: @base; }
+.margin-top-two { margin-top: @base*2; }
+.margin-top-three { margin-top: @base*3; }
+.margin-top-four { margin-top: @base*4; }
+
+.margin-right-none { margin-right: 0; }
+.margin-right-quarter { margin-right: @base/4; }
+.margin-right-half { margin-right: @base/2; }
+.margin-right-one { margin-right: @base; }
+.margin-right-two { margin-right: @base*2; }
+.margin-right-three { margin-right: @base*3; }
+.margin-right-four { margin-right: @base*4; }
+
+.margin-bottom-none { margin-bottom: 0 !important; }
+.margin-bottom-quarter { margin-bottom: @base/4 !important; }
+.margin-bottom-half { margin-bottom: @base/2 !important; }
+.margin-bottom-one { margin-bottom: @base !important; }
+.margin-bottom-two { margin-bottom: @base*2 !important; }
+.margin-bottom-three { margin-bottom: @base*3; }
+.margin-bottom-four { margin-bottom: @base*4; }
+
+.margin-left-none { margin-left: 0; }
+.margin-left-quarter { margin-left: @base/4; }
+.margin-left-half { margin-left: @base/2; }
+.margin-left-one { margin-left: @base; }
+.margin-left-two { margin-left: @base*2; }
+.margin-left-three { margin-left: @base*3; }
+.margin-left-four { margin-left: @base*4; }
