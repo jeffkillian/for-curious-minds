@@ -179,6 +179,13 @@
   top: 0px;
   left: 0px;
 }
+.touchSquare {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 30px;
+  background-color: #71b8f5;
+}
 .margin-none {
   margin: 0 !important ;
 }

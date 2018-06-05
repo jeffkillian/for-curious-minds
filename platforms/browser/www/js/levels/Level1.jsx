@@ -38,6 +38,7 @@ export default class Level1 extends React.Component {
 
     renderStartStopButton(){
         const store = this.props.store.currentLevelStore
+        
         const buttonClass = store.state == "playing" ? "danger" : "success"
         return(
                 <button 

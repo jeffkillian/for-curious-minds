@@ -62,6 +62,7 @@ export default class Level1Store {
     }
 
     onStartStopClick() {
+        if (this.state == "won") return
         if (this.state == "playing") return this.endRound()
         return this.startRound()
     }

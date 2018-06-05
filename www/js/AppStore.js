@@ -7,6 +7,9 @@ export default class AppStore {
 
     constructor(){
         this.levels=Levels
+        this.levels.forEach(levelObj => {
+            levelObj.store.gameStore = this
+        })
 
     }
 

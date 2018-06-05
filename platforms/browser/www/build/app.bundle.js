@@ -76,200 +76,10 @@ if (process.env.NODE_ENV === 'production') {
   module.exports = __webpack_require__(23);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10640,49 +10450,197 @@ return jQuery;
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 2 */
+/***/ (function(module, exports) {
 
-"use strict";
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
 
 
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * 
- */
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
 
-function makeEmptyFunction(arg) {
-  return function () {
-    return arg;
-  };
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
 }
 
-/**
- * This function accepts and discards inputs; it has no side effects. This is
- * primarily useful idiomatically for overridable function endpoints which
- * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
- */
-var emptyFunction = function emptyFunction() {};
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
 
-emptyFunction.thatReturns = makeEmptyFunction;
-emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-emptyFunction.thatReturnsThis = function () {
-  return this;
-};
-emptyFunction.thatReturnsArgument = function (arg) {
-  return arg;
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
 };
 
-module.exports = emptyFunction;
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10698,7 +10656,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useStaticRendering", function() { return useStaticRendering; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Provider", function() { return Provider; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inject", function() { return inject; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobx__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_dom__ = __webpack_require__(13);
@@ -11724,7 +11682,7 @@ if ((typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "undefined" ? "undefined" : _typeo
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15563,7 +15521,7 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -15572,7 +15530,7 @@ if (typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "object") {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-	 true ? factory(exports, __webpack_require__(2), __webpack_require__(33)) :
+	 true ? factory(exports, __webpack_require__(1), __webpack_require__(33)) :
 	typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
 	(factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -19463,6 +19421,48 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * 
+ */
+
+function makeEmptyFunction(arg) {
+  return function () {
+    return arg;
+  };
+}
+
+/**
+ * This function accepts and discards inputs; it has no side effects. This is
+ * primarily useful idiomatically for overridable function endpoints which
+ * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+ */
+var emptyFunction = function emptyFunction() {};
+
+emptyFunction.thatReturns = makeEmptyFunction;
+emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
+emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
+emptyFunction.thatReturnsNull = makeEmptyFunction(null);
+emptyFunction.thatReturnsThis = function () {
+  return this;
+};
+emptyFunction.thatReturnsArgument = function (arg) {
+  return arg;
+};
+
+module.exports = emptyFunction;
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19581,7 +19581,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = emptyObject;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 9 */
@@ -19641,7 +19641,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 10 */
@@ -19658,7 +19658,7 @@ module.exports = invariant;
 
 
 
-var emptyFunction = __webpack_require__(3);
+var emptyFunction = __webpack_require__(6);
 
 /**
  * Similar to invariant but only logs a warning if the condition is not met.
@@ -19710,7 +19710,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 module.exports = warning;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 11 */
@@ -19777,7 +19777,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 
 module.exports = checkPropTypes;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 12 */
@@ -19850,7 +19850,7 @@ if (process.env.NODE_ENV === 'production') {
   module.exports = __webpack_require__(28);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 14 */
@@ -19907,7 +19907,7 @@ module.exports = ExecutionEnvironment;
  * @typechecks
  */
 
-var emptyFunction = __webpack_require__(3);
+var emptyFunction = __webpack_require__(6);
 
 /**
  * Upstream version of event listener. Does not take into account specific
@@ -19970,7 +19970,7 @@ var EventListener = {
 };
 
 module.exports = EventListener;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 16 */
@@ -20177,15 +20177,15 @@ var _reactDom = __webpack_require__(13);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _mobxReact = __webpack_require__(4);
+var _mobxReact = __webpack_require__(3);
 
 var _AppStore = __webpack_require__(34);
 
 var _AppStore2 = _interopRequireDefault(_AppStore);
 
-__webpack_require__(6);
+__webpack_require__(5);
 
-__webpack_require__(2);
+__webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20218,11 +20218,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _mobxReact = __webpack_require__(4);
+var _mobxReact = __webpack_require__(3);
 
-__webpack_require__(6);
+__webpack_require__(5);
 
-__webpack_require__(2);
+__webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20270,7 +20270,7 @@ exports.default = AppContent;
  * LICENSE file in the root directory of this source tree.
  */
 
-var m=__webpack_require__(7),n=__webpack_require__(8),p=__webpack_require__(3),q="function"===typeof Symbol&&Symbol["for"],r=q?Symbol["for"]("react.element"):60103,t=q?Symbol["for"]("react.call"):60104,u=q?Symbol["for"]("react.return"):60105,v=q?Symbol["for"]("react.portal"):60106,w=q?Symbol["for"]("react.fragment"):60107,x="function"===typeof Symbol&&Symbol.iterator;
+var m=__webpack_require__(7),n=__webpack_require__(8),p=__webpack_require__(6),q="function"===typeof Symbol&&Symbol["for"],r=q?Symbol["for"]("react.element"):60103,t=q?Symbol["for"]("react.call"):60104,u=q?Symbol["for"]("react.return"):60105,v=q?Symbol["for"]("react.portal"):60106,w=q?Symbol["for"]("react.fragment"):60107,x="function"===typeof Symbol&&Symbol.iterator;
 function y(a){for(var b=arguments.length-1,e="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,c=0;c<b;c++)e+="\x26args[]\x3d"+encodeURIComponent(arguments[c+1]);b=Error(e+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}
 var z={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function A(a,b,e){this.props=a;this.context=b;this.refs=n;this.updater=e||z}A.prototype.isReactComponent={};A.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?y("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState")};A.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate")};
 function B(a,b,e){this.props=a;this.context=b;this.refs=n;this.updater=e||z}function C(){}C.prototype=A.prototype;var D=B.prototype=new C;D.constructor=B;m(D,A.prototype);D.isPureReactComponent=!0;function E(a,b,e){this.props=a;this.context=b;this.refs=n;this.updater=e||z}var F=E.prototype=new C;F.constructor=E;m(F,A.prototype);F.unstable_isAsyncReactComponent=!0;F.render=function(){return this.props.children};var G={current:null},H=Object.prototype.hasOwnProperty,I={key:!0,ref:!0,__self:!0,__source:!0};
@@ -20310,7 +20310,7 @@ var _assign = __webpack_require__(7);
 var emptyObject = __webpack_require__(8);
 var invariant = __webpack_require__(9);
 var warning = __webpack_require__(10);
-var emptyFunction = __webpack_require__(3);
+var emptyFunction = __webpack_require__(6);
 var checkPropTypes = __webpack_require__(11);
 
 // TODO: this is special because it gets imported during build.
@@ -21647,7 +21647,7 @@ module.exports = react;
   })();
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 24 */
@@ -21685,7 +21685,7 @@ module.exports = ReactPropTypesSecret;
 /*
  Modernizr 3.0.0pre (Custom Build) | MIT
 */
-var aa=__webpack_require__(0),l=__webpack_require__(14),B=__webpack_require__(7),C=__webpack_require__(3),ba=__webpack_require__(15),da=__webpack_require__(16),ea=__webpack_require__(17),fa=__webpack_require__(18),ia=__webpack_require__(19),D=__webpack_require__(8);
+var aa=__webpack_require__(0),l=__webpack_require__(14),B=__webpack_require__(7),C=__webpack_require__(6),ba=__webpack_require__(15),da=__webpack_require__(16),ea=__webpack_require__(17),fa=__webpack_require__(18),ia=__webpack_require__(19),D=__webpack_require__(8);
 function E(a){for(var b=arguments.length-1,c="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,d=0;d<b;d++)c+="\x26args[]\x3d"+encodeURIComponent(arguments[d+1]);b=Error(c+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}aa?void 0:E("227");
 var oa={children:!0,dangerouslySetInnerHTML:!0,defaultValue:!0,defaultChecked:!0,innerHTML:!0,suppressContentEditableWarning:!0,suppressHydrationWarning:!0,style:!0};function pa(a,b){return(a&b)===b}
 var ta={MUST_USE_PROPERTY:1,HAS_BOOLEAN_VALUE:4,HAS_NUMERIC_VALUE:8,HAS_POSITIVE_NUMERIC_VALUE:24,HAS_OVERLOADED_BOOLEAN_VALUE:32,HAS_STRING_BOOLEAN_VALUE:64,injectDOMPropertyConfig:function(a){var b=ta,c=a.Properties||{},d=a.DOMAttributeNamespaces||{},e=a.DOMAttributeNames||{};a=a.DOMMutationMethods||{};for(var f in c){ua.hasOwnProperty(f)?E("48",f):void 0;var g=f.toLowerCase(),h=c[f];g={attributeName:g,attributeNamespace:null,propertyName:f,mutationMethod:null,mustUseProperty:pa(h,b.MUST_USE_PROPERTY),
@@ -21987,7 +21987,7 @@ var invariant = __webpack_require__(9);
 var warning = __webpack_require__(10);
 var ExecutionEnvironment = __webpack_require__(14);
 var _assign = __webpack_require__(7);
-var emptyFunction = __webpack_require__(3);
+var emptyFunction = __webpack_require__(6);
 var EventListener = __webpack_require__(15);
 var getActiveElement = __webpack_require__(16);
 var shallowEqual = __webpack_require__(17);
@@ -37360,7 +37360,7 @@ module.exports = reactDom;
   })();
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
 /* 29 */
@@ -40058,7 +40058,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _mobx = __webpack_require__(5);
+var _mobx = __webpack_require__(4);
 
 var _Levels = __webpack_require__(35);
 
@@ -40124,6 +40124,9 @@ var AppStore = (_class = function () {
         };
 
         this.levels = _Levels2.default;
+        this.levels.forEach(function (levelObj) {
+            levelObj.store.gameStore = _this;
+        });
     }
 
     _createClass(AppStore, [{
@@ -40195,13 +40198,31 @@ var _Level2Store = __webpack_require__(41);
 
 var _Level2Store2 = _interopRequireDefault(_Level2Store);
 
+var _Level7 = __webpack_require__(42);
+
+var _Level8 = _interopRequireDefault(_Level7);
+
+var _Level3Store = __webpack_require__(43);
+
+var _Level3Store2 = _interopRequireDefault(_Level3Store);
+
+var _Level9 = __webpack_require__(44);
+
+var _Level10 = _interopRequireDefault(_Level9);
+
+var _Level4Store = __webpack_require__(45);
+
+var _Level4Store2 = _interopRequireDefault(_Level4Store);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var levels = [];
+// addLevelToLevels(< Level3 />,new Level3Store())
+addLevelToLevels(_react2.default.createElement(_Level10.default, null), new _Level4Store2.default());
+// addLevelToLevels(< Level0 /> ,new Level0Store())
+// addLevelToLevels(< Level1 />,new Level1Store())
+// addLevelToLevels(< Level2 />,new Level2Store())
 
-//addLevelToLevels(< Level0 />,new Level0Store())
-//addLevelToLevels(< Level1 />,new Level1Store())
-addLevelToLevels(_react2.default.createElement(_Level6.default, null), new _Level2Store2.default());
 
 function addLevelToLevels(component, store) {
     levels.push({
@@ -40224,7 +40245,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = undefined;
 
-var _mobx = __webpack_require__(5);
+var _mobx = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -40254,11 +40275,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _mobxReact = __webpack_require__(4);
+var _mobxReact = __webpack_require__(3);
 
-__webpack_require__(6);
+__webpack_require__(5);
 
-__webpack_require__(2);
+__webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40320,7 +40341,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7, _descriptor8;
 
-var _mobx = __webpack_require__(5);
+var _mobx = __webpack_require__(4);
 
 function _initDefineProp(target, property, descriptor, context) {
     if (!descriptor) return;
@@ -40420,6 +40441,7 @@ var Level1Store = (_class = function () {
     }, {
         key: "onStartStopClick",
         value: function onStartStopClick() {
+            if (this.state == "won") return;
             if (this.state == "playing") return this.endRound();
             return this.startRound();
         }
@@ -40567,11 +40589,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _mobxReact = __webpack_require__(4);
+var _mobxReact = __webpack_require__(3);
 
-__webpack_require__(6);
+__webpack_require__(5);
 
-__webpack_require__(2);
+__webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40643,6 +40665,7 @@ var Level1 = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mobxRea
         key: "renderStartStopButton",
         value: function renderStartStopButton() {
             var store = this.props.store.currentLevelStore;
+
             var buttonClass = store.state == "playing" ? "danger" : "success";
             return _react2.default.createElement(
                 "button",
@@ -40775,11 +40798,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _mobxReact = __webpack_require__(4);
+var _mobxReact = __webpack_require__(3);
 
-__webpack_require__(6);
+__webpack_require__(5);
 
-__webpack_require__(2);
+__webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40919,9 +40942,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _desc, _value, _class, _descriptor;
 
-var _mobx = __webpack_require__(5);
+var _mobx = __webpack_require__(4);
 
-var _jquery = __webpack_require__(2);
+var _jquery = __webpack_require__(1);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -40989,7 +41012,6 @@ var Level2Store = (_class = function () {
             if (this.lastClicked.length > this.numBoxes) this.lastClicked = this.lastClicked.substring(1);
             this.highlight(".lightUp" + id);
             console.log(this.lastClicked);
-            console.log(this.lastClicked == "12");
         }
     }, {
         key: "highlight",
@@ -41026,6 +41048,289 @@ var Level2Store = (_class = function () {
     }
 }), _applyDecoratedDescriptor(_class.prototype, "onClick", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onClick"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "validValues", [_mobx.computed], Object.getOwnPropertyDescriptor(_class.prototype, "validValues"), _class.prototype)), _class);
 exports.default = Level2Store;
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _mobxReact = __webpack_require__(3);
+
+__webpack_require__(5);
+
+__webpack_require__(1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Level3 = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mobxReact.observer)(_class = function (_React$Component) {
+    _inherits(Level3, _React$Component);
+
+    function Level3() {
+        _classCallCheck(this, Level3);
+
+        return _possibleConstructorReturn(this, (Level3.__proto__ || Object.getPrototypeOf(Level3)).apply(this, arguments));
+    }
+
+    _createClass(Level3, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                null,
+                this.renderTouchSquare(1, 280, 150),
+                this.renderTouchSquare(2, 548, 119),
+                this.renderTouchSquare(3, 92, 28),
+                this.renderTouchSquare(4, 170, 280),
+                this.renderTouchSquare(5, 534, 269),
+                this.renderTouchSquare(6, 540, 10),
+                this.renderTouchSquare(7, 80, 260),
+                this.renderTouchSquare(8, 253, 232),
+                this.renderTouchSquare(9, 170, 30),
+                this.renderTouchSquare(10, 390, 270)
+            );
+        }
+    }, {
+        key: "renderTouchSquare",
+        value: function renderTouchSquare(id, y, x) {
+            var store = this.props.store.currentLevelStore;
+            if (!store.touchedSquares.includes(id)) return;
+            var divStyle = {
+                top: y,
+                left: x
+            };
+            return _react2.default.createElement("div", { className: "touchSquare", style: divStyle,
+                onTouchStart: store.onTouchStart.bind(store, id),
+                onTouchEnd: store.onTouchEnd.bind(store, id),
+
+                id: "lvl3_" + id });
+        }
+    }]);
+
+    return Level3;
+}(_react2.default.Component)) || _class) || _class);
+exports.default = Level3;
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _desc, _value, _class, _descriptor;
+
+var _mobx = __webpack_require__(4);
+
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _initDefineProp(target, property, descriptor, context) {
+  if (!descriptor) return;
+  Object.defineProperty(target, property, {
+    enumerable: descriptor.enumerable,
+    configurable: descriptor.configurable,
+    writable: descriptor.writable,
+    value: descriptor.initializer ? descriptor.initializer.call(context) : void 0
+  });
+}
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+  var desc = {};
+  Object['ke' + 'ys'](descriptor).forEach(function (key) {
+    desc[key] = descriptor[key];
+  });
+  desc.enumerable = !!desc.enumerable;
+  desc.configurable = !!desc.configurable;
+
+  if ('value' in desc || desc.initializer) {
+    desc.writable = true;
+  }
+
+  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+    return decorator(target, property, desc) || desc;
+  }, desc);
+
+  if (context && desc.initializer !== void 0) {
+    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+    desc.initializer = undefined;
+  }
+
+  if (desc.initializer === void 0) {
+    Object['define' + 'Property'](target, property, desc);
+    desc = null;
+  }
+
+  return desc;
+}
+
+function _initializerWarningHelper(descriptor, context) {
+  throw new Error('Decorating class property failed. Please ensure that transform-class-properties is enabled.');
+}
+
+var Level3Store = (_class = function () {
+  function Level3Store(wizardStore) {
+    _classCallCheck(this, Level3Store);
+
+    _initDefineProp(this, "touchedSquares", _descriptor, this);
+  }
+
+  _createClass(Level3Store, [{
+    key: "onTouchStart",
+    value: function onTouchStart(id, e) {
+      if (id == 10) return this.gameStore.goToNextLevel();
+      this.touchedSquares.push(id + 1);
+      console.log(this.touchedSquares);
+    }
+  }, {
+    key: "onTouchEnd",
+    value: function onTouchEnd(id, e) {
+      if (id == 1) return this.touchedSquares = [1];
+      this.touchedSquares = this.touchedSquares.filter(function (itemId) {
+        return itemId < id;
+      });
+    }
+  }]);
+
+  return Level3Store;
+}(), (_descriptor = _applyDecoratedDescriptor(_class.prototype, "touchedSquares", [_mobx.observable], {
+  enumerable: true,
+  initializer: function initializer() {
+    return [1];
+  }
+}), _applyDecoratedDescriptor(_class.prototype, "onTouchStart", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onTouchStart"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "onTouchEnd", [_mobx.action], Object.getOwnPropertyDescriptor(_class.prototype, "onTouchEnd"), _class.prototype)), _class);
+exports.default = Level3Store;
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _mobxReact = __webpack_require__(3);
+
+__webpack_require__(5);
+
+__webpack_require__(1);
+
+var _fireworks = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"fireworks\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+var _fireworks2 = _interopRequireDefault(_fireworks);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Level4 = (_dec = (0, _mobxReact.inject)("store"), _dec(_class = (0, _mobxReact.observer)(_class = function (_React$Component) {
+    _inherits(Level4, _React$Component);
+
+    function Level4() {
+        _classCallCheck(this, Level4);
+
+        return _possibleConstructorReturn(this, (Level4.__proto__ || Object.getPrototypeOf(Level4)).apply(this, arguments));
+    }
+
+    _createClass(Level4, [{
+        key: "onComponentDidMount",
+        value: function onComponentDidMount() {
+            (0, _fireworks2.default)({
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
+                colors: ["#cc3333", "#4CAF50", "#81C784"]
+            });
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "div",
+                { className: "centered" },
+                "You win"
+            );
+        }
+    }]);
+
+    return Level4;
+}(_react2.default.Component)) || _class) || _class);
+exports.default = Level4;
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = undefined;
+
+var _mobx = __webpack_require__(4);
+
+var _jquery = __webpack_require__(1);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Level4Store = function Level4Store() {
+  _classCallCheck(this, Level4Store);
+};
+
+exports.default = Level4Store;
 
 /***/ })
 /******/ ]);

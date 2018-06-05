@@ -59,7 +59,7 @@ export default class Level1Store {
 
     printableTime(time){
         return (time/ 1000).toFixed(3)
-    }q
+    }
 
     onStartStopClick() {
         if (this.state == "won") return

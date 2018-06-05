@@ -14,7 +14,6 @@ export default class Level2Store {
         if (this.lastClicked.length > this.numBoxes) this.lastClicked = this.lastClicked.substring(1);
         this.highlight(".lightUp"+id)
         console.log(this.lastClicked)
-        console.log(this.lastClicked=="12")
     }
 
     @computed get validValues() {
