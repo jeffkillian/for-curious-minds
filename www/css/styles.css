@@ -46,6 +46,9 @@
   font-size: 23px;
   font-family: "OxygenMono";
 }
+.fireworks-container {
+  height: 500px;
+}
 .wow-image {
   -webkit-animation: rotation 8s infinite linear;
   width: 89%;

@@ -30,6 +30,8 @@
     "webpack": "^3.11.0"
   },
   "dependencies": {
+    "fireworks": "^2.1.1",
+    "fireworks-canvas": "^2.2.0",
     "jquery": "^3.3.1",
     "mobx": "^3.6.1",
     "mobx-react": "^4.4.3",
