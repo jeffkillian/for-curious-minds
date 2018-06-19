@@ -36,10 +36,16 @@ export default class Level4 extends React.Component {
         })
     }
 
+    exitFromApp()
+    {
+        debugger
+       navigator.app.exitApp();
+    }
+
     
     render(){
         return(
-            <div onClick={this.props.store.currentLevelStore.incrementClicks}>
+            <div onClick={this.exitFromApp}>
                 <div className="win-text-wrapper">
                     <div>{this.props.store.currentLevelStore.winText}</div>
                 </div>

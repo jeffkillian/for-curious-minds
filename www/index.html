@@ -35,10 +35,22 @@
     <title>Curiosity</title>
 </head>
 
-<body>
+<body onload="onLoad();">
     <div class="title">Curiosity</div>
     <div id="appContents" class="container"></div>
+
 </body>
 <script src="build/app.bundle.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+    function onLoad()
+    {
+        debugger
+          document.addEventListener("deviceready", onDeviceReady, true);
+    }
+
+
+</script>
+
 
 </html>

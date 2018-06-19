@@ -6,12 +6,18 @@ import AppStore from "./AppStore.js"
 import 'bootstrap';
 import "jquery"
 
-document.addEventListener("DOMContentLoaded", () => {
-const appStore = new AppStore()
-ReactDOM.render(
-    <Provider store={appStore}>
-        <AppContent />
-        </Provider>
-   , document.getElementById("appContents"));
+debugger
 
-})
+function onDeviceReady(){
+    debugger
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const appStore = new AppStore()
+        ReactDOM.render(
+            <Provider store={appStore}>
+                <AppContent />
+                </Provider>
+           , document.getElementById("appContents"));
+        
+        })
+}
